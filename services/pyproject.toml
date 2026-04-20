@@ -1,0 +1,18 @@
+[project]
+name = "bos-services"
+version = "0.0.0"
+description = "Better Open Snow — Python services workspace root"
+requires-python = ">=3.11"
+
+# Workspace members are added as services come online:
+#   M1: api
+#   M2: ingest
+[tool.uv.workspace]
+members = []
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

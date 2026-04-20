@@ -1,0 +1,20 @@
+{
+  "name": "better-open-snow",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Free snow/weather tracker for Epic + Ikon resorts (v0 MVP)",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "firebase-tools": "^14.0.0",
+    "turbo": "^2.5.0"
+  }
+}

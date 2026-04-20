@@ -1,0 +1,43 @@
+# Node / TS
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+build/
+*.tsbuildinfo
+.cache/
+
+# Expo
+.expo/
+.expo-shared/
+web-build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# Firebase emulator
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+emulator-data/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
