@@ -1,0 +1,62 @@
+[
+  {
+    "resort_id": "vail",
+    "name": "Vail",
+    "pass": "epic",
+    "state": "CO",
+    "base_lat": 39.6403,
+    "base_lon": -106.3742,
+    "base_elevation_ft": 8120,
+    "summit_elevation_ft": 11570,
+    "snotel_triplet": "842:CO:SNTL",
+    "timezone": "America/Denver"
+  },
+  {
+    "resort_id": "jackson-hole",
+    "name": "Jackson Hole",
+    "pass": "ikon",
+    "state": "WY",
+    "base_lat": 43.5875,
+    "base_lon": -110.8279,
+    "base_elevation_ft": 6311,
+    "summit_elevation_ft": 10450,
+    "snotel_triplet": "674:WY:SNTL",
+    "timezone": "America/Denver"
+  },
+  {
+    "resort_id": "mammoth",
+    "name": "Mammoth Mountain",
+    "pass": "ikon",
+    "state": "CA",
+    "base_lat": 37.6308,
+    "base_lon": -119.0326,
+    "base_elevation_ft": 7953,
+    "summit_elevation_ft": 11053,
+    "snotel_triplet": "473:CA:SNTL",
+    "timezone": "America/Los_Angeles"
+  },
+  {
+    "resort_id": "park-city",
+    "name": "Park City",
+    "pass": "epic",
+    "state": "UT",
+    "base_lat": 40.6514,
+    "base_lon": -111.5080,
+    "base_elevation_ft": 6900,
+    "summit_elevation_ft": 10026,
+    "snotel_triplet": "814:UT:SNTL",
+    "timezone": "America/Denver"
+  },
+  {
+    "resort_id": "stowe",
+    "name": "Stowe",
+    "pass": "epic",
+    "state": "VT",
+    "base_lat": 44.5308,
+    "base_lon": -72.7815,
+    "base_elevation_ft": 1559,
+    "summit_elevation_ft": 3640,
+    "snotel_triplet": "636:VT:SNTL",
+    "timezone": "America/New_York"
+  }
+]

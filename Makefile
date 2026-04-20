@@ -32,7 +32,7 @@ web:
 	@echo "web: not implemented until M9"; exit 1
 
 seed:
-	@echo "seed: not implemented until M2"; exit 1
+	cd services && uv run --package bos-ingest python -m bos_ingest seed
 
 ingest-once:
 	@echo "ingest-once: not implemented until M4"; exit 1
