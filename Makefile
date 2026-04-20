@@ -29,7 +29,7 @@ api:
 	cd services && uv run --package bos-api uvicorn bos_api.main:app --reload --host 0.0.0.0 --port 8000
 
 web:
-	@echo "web: not implemented until M9"; exit 1
+	pnpm --filter @bos/web web
 
 seed:
 	cd services && uv run --package bos-ingest python -m bos_ingest seed

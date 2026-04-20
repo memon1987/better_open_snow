@@ -16,3 +16,5 @@ export interface ResortSeed {
 }
 
 export const RESORTS: readonly ResortSeed[] = resorts as ResortSeed[];
+
+export type { paths, components, operations } from "./api";
