@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .deps import get_firestore_client
+from .routes import resorts as resorts_routes
 
 app = FastAPI(
     title="Better Open Snow API",
@@ -19,6 +20,8 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+app.include_router(resorts_routes.router)
 
 
 @app.get("/health")

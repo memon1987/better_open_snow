@@ -1,0 +1,342 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Better Open Snow API",
+    "description": "Snow + weather data for Epic/Ikon resorts (v0 MVP)",
+    "version": "0.0.0"
+  },
+  "paths": {
+    "/resorts": {
+      "get": {
+        "tags": [
+          "resorts"
+        ],
+        "summary": "List Resorts",
+        "operationId": "list_resorts_resorts_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResortList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resorts/{resort_id}": {
+      "get": {
+        "tags": [
+          "resorts"
+        ],
+        "summary": "Get Resort",
+        "operationId": "get_resort_resorts__resort_id__get",
+        "parameters": [
+          {
+            "name": "resort_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resort Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResortDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "boolean"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/debug/firestore-ping": {
+      "get": {
+        "summary": "Firestore Ping",
+        "operationId": "firestore_ping_debug_firestore_ping_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Firestore Ping Debug Firestore Ping Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ResortBase": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "title": "Lat"
+          },
+          "lon": {
+            "type": "number",
+            "title": "Lon"
+          },
+          "elevation_ft": {
+            "type": "integer",
+            "title": "Elevation Ft"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lat",
+          "lon",
+          "elevation_ft"
+        ],
+        "title": "ResortBase"
+      },
+      "ResortDetail": {
+        "properties": {
+          "resort_id": {
+            "type": "string",
+            "title": "Resort Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "pass": {
+            "type": "string",
+            "enum": [
+              "epic",
+              "ikon"
+            ],
+            "title": "Pass"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "base": {
+            "$ref": "#/components/schemas/ResortBase"
+          },
+          "summit": {
+            "$ref": "#/components/schemas/ResortElevation"
+          },
+          "snotel_triplet": {
+            "type": "string",
+            "title": "Snotel Triplet"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resort_id",
+          "name",
+          "pass",
+          "state",
+          "base",
+          "summit",
+          "snotel_triplet",
+          "timezone"
+        ],
+        "title": "ResortDetail",
+        "description": "Full metadata for the detail screen."
+      },
+      "ResortElevation": {
+        "properties": {
+          "elevation_ft": {
+            "type": "integer",
+            "title": "Elevation Ft"
+          }
+        },
+        "type": "object",
+        "required": [
+          "elevation_ft"
+        ],
+        "title": "ResortElevation"
+      },
+      "ResortList": {
+        "properties": {
+          "resorts": {
+            "items": {
+              "$ref": "#/components/schemas/ResortSummary"
+            },
+            "type": "array",
+            "title": "Resorts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resorts"
+        ],
+        "title": "ResortList"
+      },
+      "ResortSummary": {
+        "properties": {
+          "resort_id": {
+            "type": "string",
+            "title": "Resort Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "pass": {
+            "type": "string",
+            "enum": [
+              "epic",
+              "ikon"
+            ],
+            "title": "Pass"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "base_elevation_ft": {
+            "type": "integer",
+            "title": "Base Elevation Ft"
+          },
+          "summit_elevation_ft": {
+            "type": "integer",
+            "title": "Summit Elevation Ft"
+          },
+          "latest_snow_24h_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Snow 24H In"
+          },
+          "snow_depth_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow Depth In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resort_id",
+          "name",
+          "pass",
+          "state",
+          "base_elevation_ft",
+          "summit_elevation_ft"
+        ],
+        "title": "ResortSummary",
+        "description": "Compact row for the list screen."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
