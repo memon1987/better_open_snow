@@ -4,11 +4,11 @@ version = "0.0.0"
 description = "Better Open Snow — Python services workspace root"
 requires-python = ">=3.11"
 
-# Workspace members are added as services come online:
+# Workspace members are added as services come online.
 #   M1: api
 #   M2: ingest
 [tool.uv.workspace]
-members = []
+members = ["api"]
 
 [tool.ruff]
 line-length = 100

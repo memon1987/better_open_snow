@@ -17,7 +17,7 @@ help:
 install:
 	pnpm install
 	@if [ -d services/api ] || [ -d services/ingest ]; then \
-		cd services && uv sync; \
+		cd services && uv sync --all-packages; \
 	else \
 		echo "No Python services yet — skipping uv sync"; \
 	fi
@@ -26,7 +26,7 @@ emulator:
 	pnpm exec firebase emulators:start --only firestore --project demo-bos
 
 api:
-	@echo "api: not implemented until M1"; exit 1
+	cd services && uv run --package bos-api uvicorn bos_api.main:app --reload --host 0.0.0.0 --port 8000
 
 web:
 	@echo "web: not implemented until M9"; exit 1
@@ -50,7 +50,7 @@ backfill-daily:
 	@echo "backfill-daily: not implemented until M7"; exit 1
 
 openapi:
-	@echo "openapi: not implemented until M3"; exit 1
+	cd services && uv run --package bos-api python -m bos_api.dump_openapi
 
 dev:
 	@echo "dev: not implemented until M9"; exit 1

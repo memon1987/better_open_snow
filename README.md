@@ -48,7 +48,7 @@ make web              # http://localhost:8081
 ## Milestone status
 
 - [x] **M0** — Repo skeleton, emulator boots
-- [ ] **M1** — FastAPI hello-world
+- [x] **M1** — FastAPI hello-world
 - [ ] **M2** — Seed 5 resorts
 - [ ] **M3** — `/resorts` endpoints
 - [ ] **M4** — Open-Meteo ingest
