@@ -20,10 +20,22 @@ class DailyPoint(BaseModel):
     wind_mph_max: float | None = None
 
 
+class NarrativePeriod(BaseModel):
+    name: str
+    start: str
+    end: str
+    temp_f: int | None = None
+    wind: str | None = None
+    short: str
+    detailed: str | None = None
+    is_daytime: bool = True
+
+
 class Forecast(BaseModel):
     resort_id: str
     generated_at: str
     hourly: list[HourlyPoint]
     daily: list[DailyPoint]
+    narrative: list[NarrativePeriod] = []
     sources: dict[str, str]
     is_demo: bool = False

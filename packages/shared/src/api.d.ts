@@ -72,6 +72,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/resorts/{resort_id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get History */
+        get: operations["get_history_resorts__resort_id__history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -123,6 +140,23 @@ export interface components {
             /** Wind Mph Max */
             wind_mph_max?: number | null;
         };
+        /** DailySnow */
+        DailySnow: {
+            /** Date */
+            date: string;
+            /** Snow In 24H */
+            snow_in_24h?: number | null;
+            /** Snow Depth In */
+            snow_depth_in?: number | null;
+            /** Swe In */
+            swe_in?: number | null;
+            /** Temp Hi F */
+            temp_hi_f?: number | null;
+            /** Temp Lo F */
+            temp_lo_f?: number | null;
+            /** Source */
+            source?: string | null;
+        };
         /** Forecast */
         Forecast: {
             /** Resort Id */
@@ -133,6 +167,11 @@ export interface components {
             hourly: components["schemas"]["HourlyPoint"][];
             /** Daily */
             daily: components["schemas"]["DailyPoint"][];
+            /**
+             * Narrative
+             * @default []
+             */
+            narrative: components["schemas"]["NarrativePeriod"][];
             /** Sources */
             sources: {
                 [key: string]: string;
@@ -148,6 +187,17 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** History */
+        History: {
+            /** Resort Id */
+            resort_id: string;
+            /** Season Start */
+            season_start: string;
+            /** Season To Date In */
+            season_to_date_in: number;
+            /** Daily */
+            daily: components["schemas"]["DailySnow"][];
+        };
         /** HourlyPoint */
         HourlyPoint: {
             /** T */
@@ -162,6 +212,28 @@ export interface components {
             precip_in?: number | null;
             /** Visibility Mi */
             visibility_mi?: number | null;
+        };
+        /** NarrativePeriod */
+        NarrativePeriod: {
+            /** Name */
+            name: string;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+            /** Temp F */
+            temp_f?: number | null;
+            /** Wind */
+            wind?: string | null;
+            /** Short */
+            short: string;
+            /** Detailed */
+            detailed?: string | null;
+            /**
+             * Is Daytime
+             * @default true
+             */
+            is_daytime: boolean;
         };
         /** Observations */
         Observations: {
@@ -378,6 +450,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Observations"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_history_resorts__resort_id__history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                resort_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["History"];
                 };
             };
             /** @description Validation Error */

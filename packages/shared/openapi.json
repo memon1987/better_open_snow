@@ -153,6 +153,48 @@
         }
       }
     },
+    "/resorts/{resort_id}/history": {
+      "get": {
+        "tags": [
+          "history"
+        ],
+        "summary": "Get History",
+        "operationId": "get_history_resorts__resort_id__history_get",
+        "parameters": [
+          {
+            "name": "resort_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resort Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/History"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -257,6 +299,85 @@
         ],
         "title": "DailyPoint"
       },
+      "DailySnow": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "snow_in_24h": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow In 24H"
+          },
+          "snow_depth_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow Depth In"
+          },
+          "swe_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Swe In"
+          },
+          "temp_hi_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp Hi F"
+          },
+          "temp_lo_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp Lo F"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "title": "DailySnow"
+      },
       "Forecast": {
         "properties": {
           "resort_id": {
@@ -280,6 +401,14 @@
             },
             "type": "array",
             "title": "Daily"
+          },
+          "narrative": {
+            "items": {
+              "$ref": "#/components/schemas/NarrativePeriod"
+            },
+            "type": "array",
+            "title": "Narrative",
+            "default": []
           },
           "sources": {
             "additionalProperties": {
@@ -316,6 +445,37 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "History": {
+        "properties": {
+          "resort_id": {
+            "type": "string",
+            "title": "Resort Id"
+          },
+          "season_start": {
+            "type": "string",
+            "title": "Season Start"
+          },
+          "season_to_date_in": {
+            "type": "number",
+            "title": "Season To Date In"
+          },
+          "daily": {
+            "items": {
+              "$ref": "#/components/schemas/DailySnow"
+            },
+            "type": "array",
+            "title": "Daily"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resort_id",
+          "season_start",
+          "season_to_date_in",
+          "daily"
+        ],
+        "title": "History"
       },
       "HourlyPoint": {
         "properties": {
@@ -384,6 +544,72 @@
           "t"
         ],
         "title": "HourlyPoint"
+      },
+      "NarrativePeriod": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "start": {
+            "type": "string",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "title": "End"
+          },
+          "temp_f": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp F"
+          },
+          "wind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wind"
+          },
+          "short": {
+            "type": "string",
+            "title": "Short"
+          },
+          "detailed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detailed"
+          },
+          "is_daytime": {
+            "type": "boolean",
+            "title": "Is Daytime",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "start",
+          "end",
+          "short"
+        ],
+        "title": "NarrativePeriod"
       },
       "Observations": {
         "properties": {

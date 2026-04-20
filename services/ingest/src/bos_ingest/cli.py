@@ -39,10 +39,28 @@ def main(argv: list[str] | None = None) -> int:
         weather_open_meteo.run()
         return 0
 
+    if job == "weather_nws":
+        from .jobs import weather_nws
+
+        weather_nws.run()
+        return 0
+
     if job == "snotel_obs":
         from .jobs import snotel_obs as snotel_obs_job
 
         snotel_obs_job.run()
+        return 0
+
+    if job == "daily_snow_aggregator":
+        from .jobs import daily_snow_aggregator
+
+        daily_snow_aggregator.run()
+        return 0
+
+    if job == "backfill_daily":
+        from .jobs import backfill_daily
+
+        backfill_daily.run()
         return 0
 
     log.error("unknown job", job=job)

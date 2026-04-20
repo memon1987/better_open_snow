@@ -96,6 +96,95 @@ def open_meteo(resort_id: str, lat: float, lon: float, forecast_days: int = 10) 
     }
 
 
+def nws(resort_id: str) -> dict:
+    """Synthesize a 7-day NWS narrative snapshot."""
+    now = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+    today = now.date()
+
+    narratives_snowy = [
+        "Snow showers, heavy at times",
+        "Scattered snow showers in the afternoon",
+        "Light snow with blowing winds",
+        "Morning snow, clearing by afternoon",
+    ]
+    narratives_clear = [
+        "Mostly sunny",
+        "Partly cloudy",
+        "Sunny and cool",
+        "Clear with light winds",
+    ]
+
+    periods: list[dict] = []
+    for i in range(14):  # 7 days × day+night
+        is_daytime = i % 2 == 0
+        day_offset = i // 2
+        d = today + timedelta(days=day_offset)
+        snow = _snow_today(resort_id, d)
+        narratives = narratives_snowy if snow > 0.5 else narratives_clear
+        name = (
+            ("Today" if day_offset == 0 else d.strftime("%A"))
+            if is_daytime
+            else ("Tonight" if day_offset == 0 else f"{d.strftime('%A')} Night")
+        )
+        hi, lo = _temp_today(resort_id, d)
+        temp = hi if is_daytime else lo
+        start = now + timedelta(hours=i * 12)
+        end = start + timedelta(hours=12)
+        short = narratives[int(_seed_rand(f"{resort_id}|nar|{i}") * len(narratives))]
+        periods.append(
+            {
+                "name": name,
+                "start": start.isoformat().replace("+00:00", "Z"),
+                "end": end.isoformat().replace("+00:00", "Z"),
+                "temp_f": int(round(temp)),
+                "wind": f"W {5 + int(_seed_rand(f'{resort_id}|w|{i}') * 20)} mph",
+                "short": short,
+                "detailed": f"{short}. Highs near {int(hi)}F, lows near {int(lo)}F.",
+                "is_daytime": is_daytime,
+            }
+        )
+
+    return {
+        "source": "nws",
+        "fetched_at": now.isoformat().replace("+00:00", "Z"),
+        "periods": periods,
+        "_demo": True,
+    }
+
+
+def season_daily_snow(resort_id: str, start: date, end: date) -> list[dict]:
+    """Generate a deterministic season's daily snow totals for backfill.
+
+    Stats roughly match a mid-range western season: ~200-350" total by April,
+    with snow concentrated November through March.
+    """
+    out: list[dict] = []
+    d = start
+    while d <= end:
+        # Bias storms toward Nov-Mar; late April sees rare events
+        month_factor = 1.5 if 11 <= d.month or d.month <= 3 else 0.3
+        r = _seed_rand(f"{resort_id}|season|{d.isoformat()}")
+        if r < 1.0 - 0.45 * month_factor:
+            snow = 0.0
+        else:
+            snow = round((r - 0.55) / 0.45 * 10.0 * month_factor, 1)
+        hi, lo = _temp_today(resort_id, d)
+        # Winter months run colder
+        if 12 <= d.month or d.month <= 2:
+            hi -= 10.0
+            lo -= 10.0
+        out.append(
+            {
+                "date": d.isoformat(),
+                "snow_in_24h": max(0.0, snow),
+                "temp_hi_f": round(hi, 1),
+                "temp_lo_f": round(lo, 1),
+            }
+        )
+        d += timedelta(days=1)
+    return out
+
+
 def snotel_latest(resort_id: str, triplet: str, base_elevation_ft: int) -> dict:
     """Synthesize a plausible SNOTEL latest-obs doc."""
     now = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)

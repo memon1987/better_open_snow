@@ -34,11 +34,11 @@ web:
 seed:
 	cd services && uv run --package bos-ingest python -m bos_ingest seed
 
-ingest-once: ingest-open-meteo ingest-snotel
+ingest-once: ingest-open-meteo ingest-nws ingest-snotel
 	@echo "ingest-once: done"
 
 ingest-nws:
-	@echo "ingest-nws: not implemented until M5"; exit 1
+	cd services && uv run --package bos-ingest python -m bos_ingest weather_nws
 
 ingest-open-meteo:
 	cd services && uv run --package bos-ingest python -m bos_ingest weather_open_meteo
@@ -46,8 +46,11 @@ ingest-open-meteo:
 ingest-snotel:
 	cd services && uv run --package bos-ingest python -m bos_ingest snotel_obs
 
+aggregate-daily:
+	cd services && uv run --package bos-ingest python -m bos_ingest daily_snow_aggregator
+
 backfill-daily:
-	@echo "backfill-daily: not implemented until M7"; exit 1
+	cd services && uv run --package bos-ingest python -m bos_ingest backfill_daily
 
 openapi:
 	cd services && uv run --package bos-api python -m bos_api.dump_openapi

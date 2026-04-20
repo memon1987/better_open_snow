@@ -3,7 +3,8 @@ from __future__ import annotations
 from fastapi import APIRouter, HTTPException
 
 from ..deps import get_firestore_client
-from ..models.forecast import DailyPoint, Forecast, HourlyPoint
+from ..models.forecast import DailyPoint, Forecast, HourlyPoint, NarrativePeriod
+from ..services.forecast_merge import merge
 
 router = APIRouter(tags=["forecast"])
 
@@ -15,25 +16,29 @@ def get_forecast(resort_id: str) -> Forecast:
     if not resort_snap.exists:
         raise HTTPException(status_code=404, detail=f"resort '{resort_id}' not found")
 
-    om_snap = (
-        db.collection("resorts")
-        .document(resort_id)
-        .collection("forecast_snapshots")
-        .document("open_meteo")
-        .get()
+    snapshots_ref = (
+        db.collection("resorts").document(resort_id).collection("forecast_snapshots")
     )
-    if not om_snap.exists:
+    om_snap = snapshots_ref.document("open_meteo").get()
+    nws_snap = snapshots_ref.document("nws").get()
+
+    if not om_snap.exists and not nws_snap.exists:
         raise HTTPException(
             status_code=503,
-            detail="no forecast data — run `make ingest-open-meteo`",
+            detail="no forecast data — run `make ingest-once`",
         )
-    om = om_snap.to_dict() or {}
+
+    merged = merge(
+        open_meteo=om_snap.to_dict() if om_snap.exists else None,
+        nws=nws_snap.to_dict() if nws_snap.exists else None,
+    )
 
     return Forecast(
         resort_id=resort_id,
-        generated_at=om.get("fetched_at", ""),
-        hourly=[HourlyPoint(**p) for p in om.get("hourly", [])],
-        daily=[DailyPoint(**p) for p in om.get("daily", [])],
-        sources={"snow": "open_meteo", "narrative": "open_meteo"},
-        is_demo=bool(om.get("_demo", False)),
+        generated_at=merged["generated_at"],
+        hourly=[HourlyPoint(**p) for p in merged["hourly"]],
+        daily=[DailyPoint(**p) for p in merged["daily"]],
+        narrative=[NarrativePeriod(**p) for p in merged["narrative"]],
+        sources=merged["sources"],
+        is_demo=merged["is_demo"],
     )
