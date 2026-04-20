@@ -34,17 +34,17 @@ web:
 seed:
 	cd services && uv run --package bos-ingest python -m bos_ingest seed
 
-ingest-once:
-	@echo "ingest-once: not implemented until M4"; exit 1
+ingest-once: ingest-open-meteo ingest-snotel
+	@echo "ingest-once: done"
 
 ingest-nws:
 	@echo "ingest-nws: not implemented until M5"; exit 1
 
 ingest-open-meteo:
-	@echo "ingest-open-meteo: not implemented until M4"; exit 1
+	cd services && uv run --package bos-ingest python -m bos_ingest weather_open_meteo
 
 ingest-snotel:
-	@echo "ingest-snotel: not implemented until M6"; exit 1
+	cd services && uv run --package bos-ingest python -m bos_ingest snotel_obs
 
 backfill-daily:
 	@echo "backfill-daily: not implemented until M7"; exit 1

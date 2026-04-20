@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .deps import get_firestore_client
+from .routes import forecast as forecast_routes
+from .routes import observations as observations_routes
 from .routes import resorts as resorts_routes
 
 app = FastAPI(
@@ -22,6 +24,8 @@ app.add_middleware(
 )
 
 app.include_router(resorts_routes.router)
+app.include_router(forecast_routes.router)
+app.include_router(observations_routes.router)
 
 
 @app.get("/health")

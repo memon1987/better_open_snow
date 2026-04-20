@@ -40,9 +40,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if job == "snotel_obs":
-        from .jobs import snotel_obs
+        from .jobs import snotel_obs as snotel_obs_job
 
-        snotel_obs.run()
+        snotel_obs_job.run()
         return 0
 
     log.error("unknown job", job=job)

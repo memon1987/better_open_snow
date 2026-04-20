@@ -69,6 +69,90 @@
         }
       }
     },
+    "/resorts/{resort_id}/forecast": {
+      "get": {
+        "tags": [
+          "forecast"
+        ],
+        "summary": "Get Forecast",
+        "operationId": "get_forecast_resorts__resort_id__forecast_get",
+        "parameters": [
+          {
+            "name": "resort_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resort Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forecast"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resorts/{resort_id}/observations": {
+      "get": {
+        "tags": [
+          "observations"
+        ],
+        "summary": "Get Observations",
+        "operationId": "get_observations_resorts__resort_id__observations_get",
+        "parameters": [
+          {
+            "name": "resort_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Resort Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Observations"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -116,6 +200,110 @@
   },
   "components": {
     "schemas": {
+      "DailyPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "snow_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow In"
+          },
+          "temp_hi_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp Hi F"
+          },
+          "temp_lo_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp Lo F"
+          },
+          "wind_mph_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wind Mph Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date"
+        ],
+        "title": "DailyPoint"
+      },
+      "Forecast": {
+        "properties": {
+          "resort_id": {
+            "type": "string",
+            "title": "Resort Id"
+          },
+          "generated_at": {
+            "type": "string",
+            "title": "Generated At"
+          },
+          "hourly": {
+            "items": {
+              "$ref": "#/components/schemas/HourlyPoint"
+            },
+            "type": "array",
+            "title": "Hourly"
+          },
+          "daily": {
+            "items": {
+              "$ref": "#/components/schemas/DailyPoint"
+            },
+            "type": "array",
+            "title": "Daily"
+          },
+          "sources": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Sources"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "resort_id",
+          "generated_at",
+          "hourly",
+          "daily",
+          "sources"
+        ],
+        "title": "Forecast"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -128,6 +316,102 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HourlyPoint": {
+        "properties": {
+          "t": {
+            "type": "string",
+            "title": "T"
+          },
+          "temp_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temp F"
+          },
+          "wind_mph": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wind Mph"
+          },
+          "snowfall_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snowfall In"
+          },
+          "precip_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Precip In"
+          },
+          "visibility_mi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visibility Mi"
+          }
+        },
+        "type": "object",
+        "required": [
+          "t"
+        ],
+        "title": "HourlyPoint"
+      },
+      "Observations": {
+        "properties": {
+          "resort_id": {
+            "type": "string",
+            "title": "Resort Id"
+          },
+          "snotel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SnotelObservation"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "resort_id"
+        ],
+        "title": "Observations"
       },
       "ResortBase": {
         "properties": {
@@ -296,6 +580,68 @@
         ],
         "title": "ResortSummary",
         "description": "Compact row for the list screen."
+      },
+      "SnotelObservation": {
+        "properties": {
+          "station_triplet": {
+            "type": "string",
+            "title": "Station Triplet"
+          },
+          "observed_at": {
+            "type": "string",
+            "title": "Observed At"
+          },
+          "swe_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Swe In"
+          },
+          "snow_depth_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow Depth In"
+          },
+          "snow_24h_in": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snow 24H In"
+          },
+          "air_temp_f": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Air Temp F"
+          }
+        },
+        "type": "object",
+        "required": [
+          "station_triplet",
+          "observed_at"
+        ],
+        "title": "SnotelObservation"
       },
       "ValidationError": {
         "properties": {
