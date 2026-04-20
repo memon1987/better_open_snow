@@ -49,16 +49,16 @@ make web              # http://localhost:8081
 
 - [x] **M0** — Repo skeleton, emulator boots
 - [x] **M1** — FastAPI hello-world
-- [ ] **M2** — Seed 5 resorts
-- [ ] **M3** — `/resorts` endpoints
-- [ ] **M4** — Open-Meteo ingest
-- [ ] **M5** — NWS ingest
-- [ ] **M6** — SNOTEL ingest
-- [ ] **M7** — Daily aggregator + backfill
-- [ ] **M8** — Forecast / observations / history endpoints
-- [ ] **M9** — Expo web shell
-- [ ] **M10** — Detail page wired up
-- [ ] **M11** — Polish
+- [x] **M2** — Seed 5 resorts
+- [x] **M3** — `/resorts` endpoints
+- [x] **M4** — Open-Meteo ingest
+- [x] **M5** — NWS ingest + narrative merge
+- [x] **M6** — SNOTEL ingest
+- [x] **M7** — Daily aggregator + backfill + `/history`
+- [x] **M8** — Forecast / observations / history endpoints
+- [x] **M9** — Expo web shell
+- [x] **M10** — Detail page wired up
+- [x] **M11** — Polish (tests, timezone-aware dates, refresh, responsive layout)
 
 ## Layout
 
@@ -67,6 +67,29 @@ apps/web              Expo + expo-router PWA
 services/api          FastAPI service (Cloud Run target)
 services/ingest       Data ingest workers (Cloud Run Jobs target)
 packages/shared       resorts.seed.json, openapi.json, generated TS types
+```
+
+## Running offline / in restricted sandboxes
+
+If your dev environment can't reach `api.open-meteo.com`, `api.weather.gov`,
+or AWDB (e.g. a corporate network or a restricted CI sandbox), set
+`BOS_USE_DEMO_DATA=1` when running the ingest jobs:
+
+```bash
+FIRESTORE_EMULATOR_HOST=localhost:8080 BOS_USE_DEMO_DATA=1 make seed ingest-once backfill-daily
+```
+
+The ingest workers will skip network calls and write deterministic, realistic-
+shaped synthetic data. API responses will carry `is_demo: true` and the web
+UI will display a banner.
+
+On a normal machine with internet access, leave the env var unset to hit the
+real APIs.
+
+## Tests
+
+```bash
+make test    # 23 unit tests for the ingest transformers + forecast_merge
 ```
 
 ## Non-goals (v0)

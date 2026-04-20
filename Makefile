@@ -1,4 +1,4 @@
-.PHONY: help install emulator api web seed ingest-once ingest-nws ingest-open-meteo ingest-snotel backfill-daily openapi dev clean
+.PHONY: help install emulator api web seed ingest-once ingest-nws ingest-open-meteo ingest-snotel aggregate-daily backfill-daily openapi test dev clean
 
 help:
 	@echo "Better Open Snow — dev targets"
@@ -11,6 +11,7 @@ help:
 	@echo "  ingest-once      Run nws + open_meteo + snotel + aggregator     [M4+]"
 	@echo "  backfill-daily   Backfill season-to-date from Open-Meteo archive [M7+]"
 	@echo "  openapi          Regenerate packages/shared/openapi.json        [M3+]"
+	@echo "  test             Run pytest across api + ingest                 [M11]"
 	@echo "  dev              Run emulator + api + web concurrently          [M9+]"
 	@echo "  clean            Remove build artifacts and caches"
 
@@ -54,6 +55,9 @@ backfill-daily:
 
 openapi:
 	cd services && uv run --package bos-api python -m bos_api.dump_openapi
+
+test:
+	cd services && uv run pytest
 
 dev:
 	@echo "dev: not implemented until M9"; exit 1
